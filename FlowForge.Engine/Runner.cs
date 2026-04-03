@@ -1,16 +1,17 @@
-﻿using FlowForge.Engine.Node;
+﻿using System.Collections.ObjectModel;
+using FlowForge.Engine.Node;
 
 namespace FlowForge.Engine;
 
 public abstract class Runner
 {
-    public async Task Run(List<Node.Node> nodes)
+    public static async Task Run(ObservableCollection<Node.Node> nodes)
     {
         var tasks = nodes.Select(ProcessNodeAsync);
         await Task.WhenAll(tasks);
     }
 
-    public async Task Stop(List<Node.Node> nodes)
+    public static async Task Stop(ObservableCollection<Node.Node> nodes)
     {
         foreach (var node in nodes)
         {

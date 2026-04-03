@@ -1,6 +1,10 @@
-﻿namespace FlowForge.Desktop.ViewModels;
+﻿using System.Collections.ObjectModel;
+using FlowForge.Engine;
+using FlowForge.Engine.Node;
 
-public partial class MainWindowViewModel : ViewModelBase
+namespace FlowForge.Desktop.ViewModels;
+
+public partial class MainWindowViewModel(IEngine engine) : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    public ReadOnlyObservableCollection<Node> Nodes => engine.Nodes;
 }

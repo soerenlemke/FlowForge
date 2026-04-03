@@ -1,11 +1,15 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
+using CommunityToolkit.Mvvm.ComponentModel.__Internals;
 using FlowForge.Desktop.ViewModels;
 using FlowForge.Desktop.Views;
+using FlowForge.Engine;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FlowForge.Desktop;
 
@@ -20,16 +24,30 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
+
+            var services = new ServiceCollection();
+            
+            services.AddSingleton<IEngine, Engine.Engine>();
+            services.AddTransient<MainWindowViewModel>();
+            services.AddTransient<MainWindow>(sp => new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
-            };
+                DataContext = sp.GetRequiredService<MainWindowViewModel>(),
+            });
+
+            var provider = services.BuildServiceProvider();
+
+            desktop.Startup += async (_, _) => await InitializeEngineAsync(provider);
+            desktop.MainWindow = provider.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static async Task InitializeEngineAsync(IServiceProvider serviceProvider)
+    {
+        var engine = serviceProvider.GetRequiredService<IEngine>();
+        await engine.InitializeAsync();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()
