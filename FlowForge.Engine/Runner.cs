@@ -2,33 +2,55 @@
 
 namespace FlowForge.Engine;
 
-public class Runner(List<Node.Node> nodes)
+public abstract class Runner
 {
-    public List<Node.Node> Nodes { get; set; } = nodes;
-
-    public async Task Run()
+    public async Task Run(List<Node.Node> nodes)
     {
-        foreach (var node in Nodes)
+        var tasks = nodes.Select(ProcessNodeAsync);
+        await Task.WhenAll(tasks);
+    }
+
+    public async Task Stop(List<Node.Node> nodes)
+    {
+        foreach (var node in nodes)
+        {
+            await NodeHandler.StopNode(node);
+        }
+    }
+
+    private static async Task ProcessNodeAsync(Node.Node node)
+    {
+        try
         {
             switch (node.State)
             {
                 case NodeState.WaitingForInitializing:
-                    await NodeHandler.LoadNode(node);
+                    await NodeHandler.LoadNodeAsync(node);
                     break;
-                case NodeState.Initializing:
+
                 case NodeState.Ready:
-                case NodeState.WaitingForExecution:
-                    await NodeHandler.ExecuteNode(node);
+                    await NodeHandler.SetNodeForExecutionAsync(node);
                     break;
+
+                case NodeState.WaitingForExecution:
+                    await NodeHandler.ExecuteNodeAsync(node);
+                    break;
+
+                case NodeState.Initializing:
                 case NodeState.Running:
                 case NodeState.Stopping:
                 case NodeState.Stopped:
                 case NodeState.Error:
                     break;
-
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        catch
+        {
+            node.State = NodeState.Error;
+            // TODO: log error
+            throw;
         }
     }
 }
