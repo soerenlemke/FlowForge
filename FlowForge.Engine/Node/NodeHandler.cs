@@ -22,11 +22,6 @@ public abstract class NodeHandler
         node.State = NodeState.WaitingForExecution;
     }
 
-    public static void SetNodeExecutionTime(Node node, DateTime executionTime)
-    {
-        node.ExecutionTime = executionTime;
-    }
-
     public static async Task ExecuteNodeAsync(Node node)
     {
         node.State = NodeState.Running;

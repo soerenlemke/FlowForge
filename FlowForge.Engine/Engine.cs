@@ -4,14 +4,8 @@ namespace FlowForge.Engine;
 
 public class Engine : IEngine
 {
-    private readonly ObservableCollection<Node.Node> _nodes = [];
-    public ReadOnlyObservableCollection<Node.Node> Nodes { get; }
+    public ObservableCollection<Node.Node> Nodes { get; } = [];
     private bool _isInitialized;
-
-    public Engine()
-    {
-        Nodes = new ReadOnlyObservableCollection<Node.Node>(_nodes);
-    }
     
     public Task InitializeAsync()
     {
@@ -19,9 +13,9 @@ public class Engine : IEngine
         
         if (_isInitialized) return Task.CompletedTask;
         
-        _nodes.Add(new Node.Node("Node 1"));
-        _nodes.Add(new Node.Node("Node 2"));
-        _nodes.Add(new Node.Node("Node 3"));
+        Nodes.Add(new Node.Node("Node 1"));
+        Nodes.Add(new Node.Node("Node 2"));
+        Nodes.Add(new Node.Node("Node 3"));
 
         _isInitialized = true;
 
@@ -30,11 +24,11 @@ public class Engine : IEngine
     
     public async Task StartAsync()
     {
-        await Runner.Run(_nodes);
+        await Runner.Run(Nodes);
     }
     
     public async Task StopAsync()
     {
-        await Runner.Stop(_nodes);
+        await Runner.Stop(Nodes);
     }
 }

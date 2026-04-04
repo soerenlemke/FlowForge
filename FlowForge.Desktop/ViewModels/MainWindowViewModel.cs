@@ -6,5 +6,5 @@ namespace FlowForge.Desktop.ViewModels;
 
 public partial class MainWindowViewModel(IEngine engine) : ViewModelBase
 {
-    public ReadOnlyObservableCollection<Node> Nodes => engine.Nodes;
+    public ObservableCollection<Node> Nodes => engine.Nodes;
 }
