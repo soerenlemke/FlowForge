@@ -37,6 +37,8 @@ public class Engine : IEngine
         return Task.CompletedTask;
     }
 
+    // TODO: you currently can't stop a node when it is running -> investigate issue
+    
     public async Task StartNodeAsync(Guid nodeId, CancellationToken ct = default)
     {
         var node = FindNode(nodeId);
@@ -62,6 +64,7 @@ public class Engine : IEngine
     public async Task StopNodeAsync(Guid nodeId, CancellationToken ct = default)
     {
         var node = FindNode(nodeId);
+        await Task.Delay(500, ct); // TODO: real logic should be executed here
         SetState(node, NodeState.Stopped);
     }
 

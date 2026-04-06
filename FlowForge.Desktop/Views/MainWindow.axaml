@@ -1,9 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FlowForge.Desktop.ViewModels"
-        xmlns:node="using:FlowForge.Engine.Node"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:FlowForge.Desktop.Controls"
         mc:Ignorable="d"
         d:DesignWidth="1200"
         d:DesignHeight="800"
@@ -48,18 +48,11 @@
                     <TextBlock Text="Nodes"
                                FontSize="20"
                                FontWeight="Bold" />
-
-                    <!-- TODO: new component with a button for starting nodes and the component representing the current state -->
                     
                     <ListBox ItemsSource="{Binding Nodes}">
                         <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="node:Node">
-                                <Border Padding="12" Margin="0,0,0,8" Background="#3A3A3A" CornerRadius="6">
-                                    <Grid ColumnDefinitions="2*,*,*">
-                                        <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="SemiBold" />
-                                        <TextBlock Grid.Column="1" Text="{Binding State}" />
-                                    </Grid>
-                                </Border>
+                            <DataTemplate x:DataType="vm:NodeItemViewModel">
+                                <controls:NodeCard />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

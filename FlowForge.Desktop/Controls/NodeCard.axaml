@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:FlowForge.Desktop.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignWidth="500" d:DesignHeight="80"
+             x:Class="FlowForge.Desktop.Controls.NodeCard"
+             x:DataType="vm:NodeItemViewModel">
+    
+    <Border Padding="12"
+            Margin="0,0,0,8"
+            Background="{Binding BackgroundColor}"
+            CornerRadius="6">
+        <Grid ColumnDefinitions="2*,*,Auto" ColumnSpacing="12">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Name}"
+                       Foreground="{Binding ForegroundColor}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding State}"
+                          Foreground="{Binding ForegroundColor}"
+                       VerticalAlignment="Center" />
+            <Button Grid.Column="2"
+                    Content="{Binding ActionText}"
+                    Command="{Binding ExecuteActionCommand}" 
+                    Foreground="{Binding ForegroundColor}"/>
+        </Grid>
+    </Border>
+    
+</UserControl>
